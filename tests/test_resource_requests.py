@@ -1,35 +1,26 @@
 from datetime import datetime
 
-from gectaro_http_client import GectaroHttpClient
+import pytest
+
+from response_models import ResourceRequestResponse, ProjectTaskRequestBody
 
 
-def test_get_resource_requests(token, url):
-    client = GectaroHttpClient(base_url=url,
-                               token=token)
+def test_get_resource_requests(client):
     response = client.get_projects_resource_requests()
     assert response.status_code == 200
-    assert response.json()
-    for item in response.json():
-        assert item["id"] is not None
-        assert item["volume"]
+    ResourceRequestResponse(project_tasks=response.json())
 
 
-def test_post_resource_requests(token, url):
-    client = GectaroHttpClient(base_url=url,
-                               token=token)
-    data = {'name': 'first_resource',
-            'needed_at': datetime.now().timestamp(),
-            'project_id': 80024,
-            'type': 1,
-            'volume': 5}
-
-    resource_id = client.post_projects_resources(data=data).json()['id']
-
-    data = {"project_tasks_resource_id": resource_id,
-            "volume": 10,
-            "cost": 5,
-            "needed_at": datetime.now().timestamp(),
-            "is_over_budget": 1}
+@pytest.mark.parametrize("is_over_budget", [False, True], indirect=True, ids=['Test with False',
+                                                                              'Test with True'])
+def test_post_resource_requests(client, resource, is_over_budget):
+    data = ProjectTaskRequestBody(
+        project_tasks_resource_id=resource,
+        volume="5",
+        cost="5",
+        is_over_budget=False,
+        needed_at=int(datetime.now().timestamp()),
+    )
 
     response = client.post_projects_resource_requests(data=data)
     assert response.status_code == 201
