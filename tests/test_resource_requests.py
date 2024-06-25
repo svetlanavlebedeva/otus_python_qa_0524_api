@@ -2,7 +2,8 @@ from datetime import datetime
 
 import pytest
 
-from response_models import ResourceRequestResponse, ProjectTaskRequestBody
+from response_models import ResourceRequestResponse
+from request_models import ProjectTaskRequestBody
 
 
 def test_get_resource_requests(client):

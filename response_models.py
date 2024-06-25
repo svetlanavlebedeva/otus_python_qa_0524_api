@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import Optional, List
 
-from pydantic import BaseModel, Field, field_validator, ConfigDict
+from pydantic import BaseModel, Field, field_validator
 
 
 class ResourceRequest(BaseModel):
@@ -36,11 +36,3 @@ class ResourceRequest(BaseModel):
 
 class ResourceRequestResponse(BaseModel):
     project_tasks: List[ResourceRequest]
-
-
-class ProjectTaskRequestBody(BaseModel):
-    model_config = ConfigDict(extra="allow")
-    project_tasks_resource_id: int
-    needed_at: int
-    volume: int
-    is_over_budget: Optional[int] = 0

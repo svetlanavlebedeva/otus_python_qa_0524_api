@@ -2,7 +2,7 @@ from typing import Union
 
 import requests
 
-from response_models import ProjectTaskRequestBody
+from request_models import ProjectTaskRequestBody
 
 
 class GectaroHttpClient:
